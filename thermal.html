@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Irofy — Thermal Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Instrument+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f4f6f9;--surf:#fff;--surf2:#f0f3f7;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --cyan:#0099cc;--cyan-d:#e0f4fb;
+  --green:#059669;--green-d:rgba(5,150,105,.1);
+  --red:#dc2626;--red-d:rgba(220,38,38,.1);
+  --amber:#d97706;--amber-d:rgba(217,119,6,.1);
+  --text:#334155;--muted:#64748b;--light:#94a3b8;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Instrument Sans',sans-serif;
+  --disp:'Syne',sans-serif;
+  --shadow:0 1px 3px rgba(0,0,0,.08);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08);
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--text);min-height:100vh;line-height:1.6;}
+.wrap{max-width:720px;margin:0 auto;padding:2rem 1.5rem;}
+
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;}
+.brand{display:flex;align-items:center;gap:8px;}
+.brand-name{font-family:var(--disp);font-size:1.05rem;font-weight:800;color:#0f172a;letter-spacing:.05em;}
+.back-link{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:5px 10px;border:1px solid var(--border2);border-radius:5px;transition:all .2s;}
+.back-link:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-d);}
+.brand-tag{font-family:var(--mono);font-size:.55rem;color:var(--cyan);letter-spacing:.18em;text-transform:uppercase;}
+
+.conn-status{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:20px;}
+.conn-status.live{background:var(--green-d);color:var(--green);}
+.conn-status.error{background:var(--red-d);color:var(--red);}
+.conn-status.loading{background:var(--cyan-d);color:var(--cyan);}
+.cdot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.cdot.pulse{animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(5,150,105,.6)}50%{box-shadow:0 0 0 4px rgba(5,150,105,0)}}
+
+.source-bar{
+  font-family:var(--mono);font-size:.65rem;color:var(--light);
+  background:var(--surf);border:1px solid var(--border);border-radius:6px;
+  padding:.5rem .75rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.4rem;
+}
+.source-bar b{color:var(--muted);font-weight:500;}
+
+.error-banner{
+  background:var(--red-d);border:1px solid rgba(220,38,38,.25);border-radius:8px;
+  padding:.85rem 1rem;margin-bottom:1.25rem;display:none;align-items:flex-start;gap:.6rem;
+}
+.error-banner.show{display:flex;}
+.error-banner svg{width:16px;height:16px;stroke:var(--red);stroke-width:1.6;fill:none;flex-shrink:0;margin-top:1px;}
+.error-banner-text{font-size:.82rem;color:var(--red);}
+.error-banner-text strong{display:block;margin-bottom:2px;}
+.error-banner-text code{font-family:var(--mono);font-size:.75rem;background:rgba(220,38,38,.08);padding:1px 5px;border-radius:3px;}
+
+.main-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:12px;
+  padding:1.75rem;margin-bottom:1.25rem;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.main-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+
+.gauge-zone{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;}
+.gauge-block{text-align:center;}
+.gauge-svg{width:160px;height:160px;display:block;}
+.gauge-temp{font-family:var(--disp);font-size:2.6rem;font-weight:800;line-height:1;}
+.gauge-temp.ok{color:var(--green);}
+.gauge-temp.warn{color:var(--amber);}
+.gauge-temp.crit{color:var(--red);}
+.gauge-unit{font-size:1.1rem;font-weight:400;opacity:.6;}
+.gauge-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--light);margin-top:.4rem;}
+.gauge-sensor-name{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:2px;}
+
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);}
+.detail-item{background:var(--surf2);border-radius:7px;padding:.6rem .8rem;}
+.detail-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--light);margin-bottom:3px;}
+.detail-value{font-family:var(--mono);font-size:.85rem;color:var(--text);}
+.detail-value.ok{color:var(--green);}
+.detail-value.warn{color:var(--amber);}
+
+.fan-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:10px;
+  padding:1.1rem 1.3rem;margin-bottom:1.25rem;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:1rem;
+}
+.fan-icon{
+  width:46px;height:46px;border-radius:50%;background:var(--cyan-d);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:20px;
+}
+.fan-icon.spin{animation:spin 1.4s linear infinite;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.fan-info{flex:1;}
+.fan-title{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--light);margin-bottom:2px;}
+.fan-rpm{font-family:var(--disp);font-size:1.4rem;font-weight:700;color:var(--text);}
+.fan-rpm span{font-size:.85rem;font-weight:400;color:var(--light);}
+.fan-name{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:2px;}
+.fan-status{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;padding:3px 9px;border-radius:12px;background:var(--green-d);color:var(--green);}
+
+.history-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:10px;
+  padding:1.1rem 1.3rem;box-shadow:var(--shadow);
+}
+.history-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;}
+.history-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);}
+.history-sub{font-family:var(--mono);font-size:.58rem;color:var(--light);}
+.chart-wrap{height:90px;}
+.chart-svg{width:100%;height:90px;}
+
+.footer-note{
+  text-align:center;font-family:var(--mono);font-size:.6rem;color:var(--light);
+  margin-top:1.5rem;letter-spacing:.04em;
+}
+.footer-note a{color:var(--cyan);text-decoration:none;}
+
+@media(max-width:480px){
+  .gauge-svg{width:130px;height:130px;}
+  .gauge-temp{font-size:2.1rem;}
+  .detail-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="5" r="2.5" fill="#0099cc" opacity=".9"/>
+        <path d="M14 2 Q16 0 18 2" stroke="#0099cc" stroke-width="1.2" fill="none"/>
+        <rect x="14.5" y="10" width="3" height="18" rx="1.5" fill="#0099cc" opacity=".8"/>
+        <path d="M14 13 C8 9 2 11 2 15 C2 19 8 17 14 15" stroke="#0099cc" stroke-width="1.2" fill="rgba(0,153,204,.2)"/>
+        <path d="M18 13 C24 9 30 11 30 15 C30 19 24 17 18 15" stroke="#0099cc" stroke-width="1.2" fill="rgba(0,153,204,.2)"/>
+      </svg>
+      <div>
+        <div class="brand-name">ROFY</div>
+        <div class="brand-tag">Thermal Monitor</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;">
+    <div class="conn-status loading" id="connStatus" style="margin-right:.6rem;">
+      <div class="cdot" id="connDot"></div>
+      <span id="connText">Connecting…</span>
+    </div>
+    <a href="index.html" class="back-link">← Fleet</a>
+    </div>
+  </div>
+
+  <div class="source-bar">
+    <span><b>Source:</b> redfish.irofy.com/redfish/v1/Chassis/1/Thermal</span>
+    <span><b>Polling:</b> every 5s</span>
+  </div>
+
+  <div class="error-banner" id="errorBanner">
+    <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div class="error-banner-text">
+      <strong>Can't reach the device</strong>
+      <span id="errorDetail">Checking connection…</span>
+    </div>
+  </div>
+
+  <div class="main-card">
+    <div class="gauge-zone">
+      <div class="gauge-block">
+        <svg class="gauge-svg" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="68" fill="none" stroke="#e2e8f0" stroke-width="10"/>
+          <circle cx="80" cy="80" r="68" fill="none" stroke="#0099cc" stroke-width="10"
+            stroke-dasharray="427" stroke-dashoffset="427" stroke-linecap="round"
+            transform="rotate(-90 80 80)" id="tempRing" style="transition:stroke-dashoffset .6s ease, stroke .6s ease;"/>
+        </svg>
+      </div>
+      <div style="text-align:center;">
+        <div class="gauge-temp ok" id="tempVal">—<span class="gauge-unit">°C</span></div>
+        <div class="gauge-label">CPU Temperature</div>
+        <div class="gauge-sensor-name" id="sensorName">—</div>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="detail-label">Status</div>
+        <div class="detail-value ok" id="statusHealth">—</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Sensor State</div>
+        <div class="detail-value" id="statusState">—</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Critical Threshold</div>
+        <div class="detail-value" id="threshCrit">—</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Fatal Threshold</div>
+        <div class="detail-value" id="threshFatal">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fan-card">
+    <div class="fan-icon" id="fanIcon">🌀</div>
+    <div class="fan-info">
+      <div class="fan-title">Fan Speed</div>
+      <div class="fan-rpm" id="fanRpm">— <span>RPM</span></div>
+      <div class="fan-name" id="fanName">—</div>
+    </div>
+    <div class="fan-status" id="fanStatus">—</div>
+  </div>
+
+  <div class="history-card">
+    <div class="history-head">
+      <span class="history-title">Temperature History</span>
+      <span class="history-sub" id="historySub">last 0 readings</span>
+    </div>
+    <div class="chart-wrap">
+      <svg class="chart-svg" viewBox="0 0 600 90" preserveAspectRatio="none" id="chartSvg">
+        <line x1="0" y1="22" x2="600" y2="22" stroke="#e2e8f0" stroke-width="0.5"/>
+        <line x1="0" y1="45" x2="600" y2="45" stroke="#e2e8f0" stroke-width="0.5"/>
+        <line x1="0" y1="67" x2="600" y2="67" stroke="#e2e8f0" stroke-width="0.5"/>
+        <polyline id="tempLine" points="" fill="none" stroke="#0099cc" stroke-width="2"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Live data from real hardware via Cloudflare Tunnel · <a href="http://redfish.irofy.com/redfish/v1/Chassis/1/Thermal" target="_blank">view raw JSON</a>
+  </div>
+
+</div>
+
+<script>
+const ENDPOINT = 'http://redfish.irofy.com/redfish/v1/Chassis/1/Thermal';
+const POLL_MS = 5000;
+const RING_CIRCUM = 427; // 2 * PI * 68
+const history = [];
+const MAX_HISTORY = 60;
+
+function setConn(state, text){
+  const el = document.getElementById('connStatus');
+  const dot = document.getElementById('connDot');
+  el.className = 'conn-status ' + state;
+  document.getElementById('connText').textContent = text;
+  dot.className = 'cdot' + (state === 'live' ? ' pulse' : '');
+}
+
+function showError(msg){
+  document.getElementById('errorBanner').classList.add('show');
+  document.getElementById('errorDetail').textContent = msg;
+}
+function hideError(){
+  document.getElementById('errorBanner').classList.remove('show');
+}
+
+function tempClass(temp, warnAt, critAt){
+  if(temp >= critAt) return 'crit';
+  if(temp >= warnAt) return 'warn';
+  return 'ok';
+}
+
+function drawHistory(){
+  if(history.length < 2) return;
+  const W = 600, H = 90;
+  const max = Math.max(...history, 60);
+  const min = Math.min(...history, 20);
+  const range = Math.max(max - min, 5);
+  const pts = history.map((v,i) => {
+    const x = (i/(MAX_HISTORY-1)) * W;
+    const y = H - ((v - min) / range) * H * 0.85 - 5;
+    return `${x},${y}`;
+  }).join(' ');
+  document.getElementById('tempLine').setAttribute('points', pts);
+  document.getElementById('historySub').textContent = `last ${history.length} readings`;
+}
+
+async function poll(){
+  try{
+    const res = await fetch(ENDPOINT, { cache: 'no-store' });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    const t = data.Temperatures && data.Temperatures[0];
+    const f = data.Fans && data.Fans[0];
+
+    if(t){
+      const temp = t.ReadingCelsius;
+      const warnAt = (t.UpperThresholdCritical || 90) * 0.75;
+      const cls = tempClass(temp, warnAt, t.UpperThresholdCritical || 90);
+
+      document.getElementById('tempVal').innerHTML = temp + '<span class="gauge-unit">°C</span>';
+      document.getElementById('tempVal').className = 'gauge-temp ' + cls;
+      document.getElementById('sensorName').textContent = t.Name || t.MemberId || '—';
+      document.getElementById('statusHealth').textContent = t.Status?.Health || '—';
+      document.getElementById('statusHealth').className = 'detail-value ' + ((t.Status?.Health === 'OK') ? 'ok' : 'warn');
+      document.getElementById('statusState').textContent = t.Status?.State || '—';
+      document.getElementById('threshCrit').textContent = (t.UpperThresholdCritical ?? '—') + ' °C';
+      document.getElementById('threshFatal').textContent = (t.UpperThresholdFatal ?? '—') + ' °C';
+
+      const ringColor = cls === 'crit' ? '#dc2626' : cls === 'warn' ? '#d97706' : '#0099cc';
+      const pct = Math.min(temp / (t.MaxReadingRangeTemp || 100), 1);
+      const offset = RING_CIRCUM - (pct * RING_CIRCUM);
+      const ring = document.getElementById('tempRing');
+      ring.style.stroke = ringColor;
+      ring.style.strokeDashoffset = offset;
+
+      history.push(temp);
+      if(history.length > MAX_HISTORY) history.shift();
+      drawHistory();
+    }
+
+    if(f){
+      document.getElementById('fanRpm').innerHTML = f.Reading + ' <span>' + (f.ReadingUnits || 'RPM') + '</span>';
+      document.getElementById('fanName').textContent = f.FanName || f.Name || '—';
+      document.getElementById('fanStatus').textContent = f.Status?.Health || '—';
+      document.getElementById('fanIcon').classList.add('spin');
+    }
+
+    setConn('live', 'Live');
+    hideError();
+  } catch(err){
+    setConn('error', 'Disconnected');
+    showError('Could not reach ' + ENDPOINT + ' — ' + err.message + '. This is usually a CORS block: the Redfish server needs an Access-Control-Allow-Origin header, or open this page directly via http:// rather than file://.');
+  }
+}
+
+poll();
+setInterval(poll, POLL_MS);
+</script>
+</body>
+</html>

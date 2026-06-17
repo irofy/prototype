@@ -374,9 +374,9 @@ body {
       <a href="index.html" class="nav-item active">
         <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         Fleet Dashboard
-        <span class="nav-badge">6</span>
+        <span class="nav-badge">7</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="thermal.html" class="nav-item">
         <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         Health Monitor
         <span class="nav-badge alert">1</span>
@@ -451,8 +451,8 @@ body {
 
   <!-- Stats -->
   <div class="stats-row">
-    <div class="stat-card c-total"><div class="stat-label">Total Devices</div><div class="stat-value">6</div><div class="stat-sub">Across 3 sites</div></div>
-    <div class="stat-card c-online"><div class="stat-label">Online</div><div class="stat-value">4</div><div class="stat-sub">Remote accessible</div></div>
+    <div class="stat-card c-total"><div class="stat-label">Total Devices</div><div class="stat-value">7</div><div class="stat-sub">Across 4 sites</div></div>
+    <div class="stat-card c-online"><div class="stat-label">Online</div><div class="stat-value">5</div><div class="stat-sub">Remote accessible</div></div>
     <div class="stat-card c-offline"><div class="stat-label">Offline</div><div class="stat-value">1</div><div class="stat-sub">Last seen 4h ago</div></div>
     <div class="stat-card c-warning"><div class="stat-label">Warnings</div><div class="stat-value">1</div><div class="stat-sub">Needs attention</div></div>
   </div>
@@ -526,6 +526,13 @@ const devices = [
     cpu:22, mem:41, temp:38, uptime:'89d 7h', fw:'v2.4.1',
     industry:'Renewable Energy', lastSeen:'now'
   },
+  {
+    id:'IRF-007', name:'Smart Car',
+    desc:'Test Vehicle · Pi Gateway',
+    status:'online', commMode:'cloud', live:true,
+    cpu:0, mem:0, temp:0, uptime:'—', fw:'v1.0.0',
+    industry:'Automotive', lastSeen:'now'
+  },
 ];
 
 let activeFilter = 'all';
@@ -550,12 +557,15 @@ function renderCard(d) {
   const memBar = on?`<div class="mini-bar-wrap"><div class="mini-bar ${barClass(d.mem)}" style="width:${d.mem}%"></div></div>`:'';
   const tBar   = on?`<div class="mini-bar-wrap"><div class="mini-bar ${barClass(d.temp,65,75)}" style="width:${Math.min(d.temp,100)}%"></div></div>`:'';
   const commLabel = d.commMode==='cloud' ? 'Remote · Cloud' : 'Local · On-Device';
+  const liveTag = d.live ? `<span style="font-family:var(--f-mono);font-size:0.46rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(220,38,38,0.08);color:#dc2626;border:1px solid rgba(220,38,38,0.25);padding:2px 7px;border-radius:10px;margin-left:6px;white-space:nowrap;">● Live HW</span>` : '';
+  const tempId = d.live ? `id="liveTemp-${d.id}"` : '';
+  const tempBarId = d.live ? `id="liveTempBar-${d.id}"` : '';
 
   return `<a class="device-card ${s}" href="device.html?id=${d.id}" data-status="${s}" data-name="${d.name.toLowerCase()}">
     <div class="device-card-header">
       <div class="device-icon ${s}">${statusIcon(s)}</div>
       <div class="device-info">
-        <div class="device-name">${d.name}</div>
+        <div class="device-name">${d.name}${liveTag}</div>
         <div class="device-sub">${d.desc}</div>
       </div>
       <div class="device-status-badge ${s}">
@@ -583,8 +593,8 @@ function renderCard(d) {
         </div>
         <div>
           <div class="metric-mini-label">Temp</div>
-          <div class="metric-mini-value ${on?barClass(d.temp,65,75)==='green'?'ok':'warn':''}">${on?d.temp+'°C':'—'}</div>
-          ${tBar}
+          <div class="metric-mini-value" ${tempId}>${d.live?'…':(on?d.temp+'°C':'—')}</div>
+          <div ${tempBarId}>${tBar}</div>
         </div>
       </div>
     </div>
@@ -628,8 +638,41 @@ function closeSidebar(){ document.getElementById('sidebar').classList.remove('op
 
 document.getElementById('deviceGrid').innerHTML = devices.map(renderCard).join('');
 
+// ── REAL HARDWARE POLLING (Smart Car / Pi via Redfish) ──
+const REDFISH_THERMAL_URL = 'https://redfish.irofy.com/redfish/v1/Chassis/1/Thermal';
+async function pollLiveDevices(){
+  const liveDevices = devices.filter(d => d.live);
+  if(liveDevices.length === 0) return;
+  try{
+    const res = await fetch(REDFISH_THERMAL_URL, {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    const t = data.Temperatures && data.Temperatures[0];
+    if(t){
+      liveDevices.forEach(d => { d.temp = t.ReadingCelsius; d.status = 'online'; });
+    }
+  } catch(err){
+    liveDevices.forEach(d => { d.status = 'offline'; });
+  }
+  // Patch just the temp cell + bar for live cards without re-rendering the whole grid
+  liveDevices.forEach(d => {
+    const cell = document.getElementById('liveTemp-'+d.id);
+    const barWrap = document.getElementById('liveTempBar-'+d.id);
+    if(cell){
+      cell.textContent = d.status==='offline' ? '—' : d.temp+'°C';
+      cell.className = 'metric-mini-value ' + (barClass(d.temp,65,75)==='green'?'ok':'warn');
+    }
+    if(barWrap){
+      barWrap.innerHTML = d.status==='offline' ? '' : `<div class="mini-bar-wrap"><div class="mini-bar ${barClass(d.temp,65,75)}" style="width:${Math.min(d.temp,100)}%"></div></div>`;
+    }
+  });
+}
+pollLiveDevices();
+setInterval(pollLiveDevices, 5000);
+
 setInterval(()=>{
   devices.forEach(d=>{
+    if(d.live) return; // real hardware — handled by pollLiveDevices()
     if(d.status==='online'||d.status==='warning'){
       d.cpu  = Math.round(Math.max(5,  Math.min(95, d.cpu +(Math.random()-.5)*8)));
       d.mem  = Math.round(Math.max(10, Math.min(90, d.mem +(Math.random()-.5)*4)));
@@ -638,6 +681,7 @@ setInterval(()=>{
   });
   document.getElementById('deviceGrid').innerHTML = devices.map(renderCard).join('');
   filterDevices();
+  pollLiveDevices();
 }, 7000);
 </script>
 </body>

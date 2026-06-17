@@ -412,7 +412,7 @@ body {
         Fleet Dashboard
         <span class="nav-badge">6</span>
       </a>
-      <a href="#" class="nav-item">
+      <a href="thermal.html" class="nav-item">
         <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         Health Monitor <span class="nav-badge alert">1</span>
       </a>
@@ -488,6 +488,7 @@ body {
             <span>FW v2.4.1</span>
           </div>
           <div class="status-pill online"><div class="s-dot"></div>Online · Uptime 14d 6h</div>
+          <span id="liveHwBadge" style="display:none;margin-left:6px;font-family:var(--f-mono);font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:rgba(220,38,38,0.08);color:#dc2626;border:1px solid rgba(220,38,38,0.25);">● Live Hardware</span>
           <!-- COMM MODE BANNER -->
           <div class="comm-banner cloud" id="commBanner">
             <svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
@@ -636,10 +637,10 @@ body {
 
         <!-- Sensor readings -->
         <div class="card">
-          <div class="card-head"><div class="card-title">Sensor Readings</div></div>
+          <div class="card-head"><div class="card-title" id="sensorCardTitle">Sensor Readings</div></div>
           <div class="card-body">
-            <div class="telem-row"><span class="telem-key">Pressure Sensor</span><span class="telem-val ok" id="sensor1">3.42 bar</span></div>
-            <div class="telem-row"><span class="telem-key">Flow Rate</span><span class="telem-val" id="sensor2">12.7 L/min</span></div>
+            <div class="telem-row"><span class="telem-key" id="sensor1Label">Pressure Sensor</span><span class="telem-val ok" id="sensor1">3.42 bar</span></div>
+            <div class="telem-row"><span class="telem-key" id="sensor2Label">Flow Rate</span><span class="telem-val" id="sensor2">12.7 L/min</span></div>
             <div class="telem-row"><span class="telem-key">Door Contact</span><span class="telem-badge ok">Closed</span></div>
             <div class="telem-row"><span class="telem-key">Alarm Output</span><span class="telem-badge ok">Clear</span></div>
             <div class="telem-row"><span class="telem-key">Ambient Temp</span><span class="telem-val ok">24.3 °C</span></div>
@@ -861,6 +862,7 @@ const deviceData = {
   'IRF-004':{ name:'Water Treatment Unit',     site:'City Plant',       comm:'local', industry:'Utilities'        },
   'IRF-005':{ name:'Cold Chain Tracker',       site:'Logistics Hub',    comm:'cloud', industry:'Logistics'        },
   'IRF-006':{ name:'Solar Farm Controller',    site:'Desert Site',      comm:'local', industry:'Renewable Energy' },
+  'IRF-007':{ name:'Smart Car',                site:'Test Vehicle',     comm:'cloud', industry:'Automotive', live:true },
 };
 const params = new URLSearchParams(location.search);
 const devId  = params.get('id') || 'IRF-001';
@@ -873,6 +875,12 @@ document.getElementById('deviceId').textContent   = devId;
 document.getElementById('deviceSite').textContent = dev.site;
 document.getElementById('infoName').textContent   = dev.name;
 document.querySelectorAll('#mDevName').forEach(e=>e.textContent=dev.name);
+if(dev.live){
+  document.getElementById('liveHwBadge').style.display='inline-flex';
+  document.getElementById('sensorCardTitle').textContent='Live Hardware Readings (Redfish)';
+  document.getElementById('sensor1Label').textContent='Fan Speed';
+  document.getElementById('sensor2Label').textContent='Data Source';
+}
 
 // Comm mode
 const isLocal = dev.comm === 'local';
@@ -957,22 +965,60 @@ const logMsgs=[['INFO','modbus: polled 12 registers OK'],['INFO','telemetry: bat
 function addLog(){const log=document.getElementById('logStream');const n=new Date();const ts=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0')+':'+n.getSeconds().toString().padStart(2,'0');const m=logMsgs[Math.floor(Math.random()*logMsgs.length)];const d=document.createElement('div');d.className='log-line';d.innerHTML=`<span class="log-ts">${ts}</span><span class="log-level-${m[0]==='WARN'?'warn':'info'}">[${m[0]}]</span><span class="log-msg"> ${m[1]}</span>`;log.insertBefore(d,log.firstChild);if(log.children.length>35)log.removeChild(log.lastChild);}
 function clearLogs(){document.getElementById('logStream').innerHTML='';}
 let cpu=42,mem=61,temp=47;
+
+// ── REAL HARDWARE POLLING (Smart Car / Pi) ──
+const REDFISH_THERMAL_URL = 'https://redfish.irofy.com/redfish/v1/Chassis/1/Thermal';
+async function pollRealThermal(){
+  try{
+    const res = await fetch(REDFISH_THERMAL_URL, {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    const t = data.Temperatures && data.Temperatures[0];
+    const f = data.Fans && data.Fans[0];
+    if(t){
+      temp = t.ReadingCelsius;
+      const critAt = t.UpperThresholdCritical || 90;
+      document.getElementById('gaugeTempCirc').style.strokeDashoffset = 188-(temp/85)*188;
+      document.getElementById('gaugeTempVal').textContent = temp+'°C';
+      document.getElementById('gaugeTempVal').className = 'gauge-val '+(temp>=critAt?'crit':temp>=critAt*0.75?'warn':'ok');
+      cpuH.push(cpu); cpuH.shift();
+      memH.push(mem); memH.shift();
+      drawChart();
+    }
+    if(f){
+      document.getElementById('sensor1').textContent = f.Reading+' '+(f.ReadingUnits||'RPM');
+    }
+    document.getElementById('sensor2').textContent = 'Live from redfish.irofy.com';
+  } catch(err){
+    document.getElementById('sensor2').textContent = 'Offline — cannot reach device';
+  }
+}
+
+if(dev.live){
+  pollRealThermal();
+  setInterval(pollRealThermal, 5000);
+}
+
 setInterval(()=>{
   cpu=Math.round(Math.max(5,Math.min(95,cpu+(Math.random()-.5)*8)));
   mem=Math.round(Math.max(15,Math.min(90,mem+(Math.random()-.5)*4)));
-  temp=Math.round(Math.max(32,Math.min(80,temp+(Math.random()-.5)*2)));
   document.getElementById('gaugeCpu').style.strokeDashoffset=188-(cpu/100)*188;
   document.getElementById('gaugeCpuVal').textContent=cpu+'%';
   document.getElementById('gaugeCpuVal').className='gauge-val '+(cpu>=85?'crit':cpu>=70?'warn':'ok');
   document.getElementById('gaugeMemCirc').style.strokeDashoffset=188-(mem/100)*188;
   document.getElementById('gaugeMemVal').textContent=mem+'%';
   document.getElementById('gaugeMemVal').className='gauge-val '+(mem>=80?'crit':mem>=60?'warn':'ok');
-  document.getElementById('gaugeTempCirc').style.strokeDashoffset=188-(temp/85)*188;
-  document.getElementById('gaugeTempVal').textContent=temp+'°C';
-  document.getElementById('gaugeTempVal').className='gauge-val '+(temp>=75?'crit':temp>=60?'warn':'ok');
+  if(!dev.live){
+    temp=Math.round(Math.max(32,Math.min(80,temp+(Math.random()-.5)*2)));
+    document.getElementById('gaugeTempCirc').style.strokeDashoffset=188-(temp/85)*188;
+    document.getElementById('gaugeTempVal').textContent=temp+'°C';
+    document.getElementById('gaugeTempVal').className='gauge-val '+(temp>=75?'crit':temp>=60?'warn':'ok');
+  }
   cpuH.push(cpu);cpuH.shift();memH.push(mem);memH.shift();drawChart();
-  document.getElementById('sensor1').textContent=(3.4+Math.random()*.1).toFixed(2)+' bar';
-  document.getElementById('sensor2').textContent=(12.5+Math.random()*.5).toFixed(1)+' L/min';
+  if(!dev.live){
+    document.getElementById('sensor1').textContent=(3.4+Math.random()*.1).toFixed(2)+' bar';
+    document.getElementById('sensor2').textContent=(12.5+Math.random()*.5).toFixed(1)+' L/min';
+  }
   const v=(5.1+Math.random()*.05).toFixed(2),a=(1.3+Math.random()*.1).toFixed(2);
   document.getElementById('voltVal').textContent=v+' V';
   document.getElementById('ampVal').textContent=a+' A';
