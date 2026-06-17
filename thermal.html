@@ -228,13 +228,13 @@ body{background:var(--bg);font-family:var(--sans);color:var(--text);min-height:1
   </div>
 
   <div class="footer-note">
-    Live data from real hardware via Cloudflare Tunnel · <a href="http://redfish.irofy.com/redfish/v1/Chassis/1/Thermal" target="_blank">view raw JSON</a>
+    Live data from real hardware via Cloudflare Tunnel · <a href="https://redfish.irofy.com/redfish/v1/Chassis/1/Thermal" target="_blank">view raw JSON</a>
   </div>
 
 </div>
 
 <script>
-const ENDPOINT = 'http://redfish.irofy.com/redfish/v1/Chassis/1/Thermal';
+const ENDPOINT = 'https://redfish.irofy.com/redfish/v1/Chassis/1/Thermal';
 const POLL_MS = 5000;
 const RING_CIRCUM = 427; // 2 * PI * 68
 const history = [];
@@ -323,7 +323,7 @@ async function poll(){
     hideError();
   } catch(err){
     setConn('error', 'Disconnected');
-    showError('Could not reach ' + ENDPOINT + ' — ' + err.message + '. This is usually a CORS block: the Redfish server needs an Access-Control-Allow-Origin header, or open this page directly via http:// rather than file://.');
+    showError('Could not reach ' + ENDPOINT + ' — ' + err.message + '. Check that the Pi, redfish-server, and Cloudflare Tunnel are all running.');
   }
 }
 
