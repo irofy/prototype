@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Irofy — Device Detail</title>
+<title>Irofy — Vehicle Detail</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 /* ── LIGHT (default) ── */
 :root {
@@ -18,10 +18,10 @@
   --c-cyan:      #0099cc;
   --c-cyan-dim:  #e0f4fb;
   --c-cyan-glow: rgba(0,153,204,0.08);
-  --c-silver:    #334155;
-  --c-silver-dim:#94a3b8;
+  --c-silver:    #1e293b;
+  --c-silver-dim:#475569;
   --c-white:     #0f172a;
-  --c-text:      #64748b;
+  --c-text:      #475569;
   --c-green:     #059669;
   --c-green-dim: rgba(5,150,105,0.1);
   --c-red:       #dc2626;
@@ -32,8 +32,8 @@
   --c-shadow-md: 0 4px 16px rgba(0,0,0,0.08);
   --topbar-bg:   rgba(244,246,249,0.92);
   --f-display:   'Syne', sans-serif;
-  --f-body:      'Instrument Sans', sans-serif;
-  --f-mono:      'JetBrains Mono', monospace;
+  --f-body:      'Inter', system-ui, -apple-system, sans-serif;
+  --f-mono:      'JetBrains Mono', 'Courier New', monospace;
   --ease: cubic-bezier(0.16,1,0.3,1);
 }
 [data-theme="dark"] {
@@ -45,10 +45,10 @@
   --c-cyan:      #00d4ff;
   --c-cyan-dim:  #003d4d;
   --c-cyan-glow: rgba(0,212,255,0.1);
-  --c-silver:    #a8b8c4;
-  --c-silver-dim:#2a3540;
+  --c-silver:    #c4d2de;
+  --c-silver-dim:#5a6b7a;
   --c-white:     #f0f6fc;
-  --c-text:      #7a8fa8;
+  --c-text:      #9fb3c8;
   --c-green:     #00e5a0;
   --c-green-dim: rgba(0,229,160,0.12);
   --c-red:       #ff4d6a;
@@ -67,6 +67,7 @@ body {
   font-family:var(--f-body); font-weight:400;
   line-height:1.6; overflow-x:hidden;
   transition:background 0.3s, color 0.3s;
+  -webkit-font-smoothing:antialiased;
 }
 ::selection { background:var(--c-cyan); color:#fff; }
 ::-webkit-scrollbar { width:4px; }
@@ -85,8 +86,8 @@ body {
 .brand-name { font-family:var(--f-display); font-size:1.1rem; font-weight:800; color:var(--c-white); letter-spacing:0.06em; }
 .brand-tag { font-family:var(--f-mono); font-size:0.46rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--c-cyan); margin-top:1px; }
 .nav-section { padding:1rem 0.85rem 0.3rem; }
-.nav-section-label { font-family:var(--f-mono); font-size:0.48rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--c-silver-dim); padding:0 0.5rem; margin-bottom:0.4rem; }
-.nav-item { display:flex; align-items:center; gap:0.7rem; padding:0.58rem 0.75rem; border-radius:6px; cursor:pointer; font-size:0.81rem; color:var(--c-text); transition:all 0.2s; text-decoration:none; margin-bottom:2px; position:relative; }
+.nav-section-label { font-family:var(--f-body); font-size:0.62rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--c-silver-dim); padding:0 0.5rem; margin-bottom:0.4rem; font-weight:600; }
+.nav-item { display:flex; align-items:center; gap:0.7rem; padding:0.58rem 0.75rem; border-radius:6px; cursor:pointer; font-size:0.84rem; color:var(--c-text); transition:all 0.2s; text-decoration:none; margin-bottom:2px; position:relative; font-weight:500; }
 .nav-item:hover { background:var(--c-cyan-glow); color:var(--c-silver); }
 .nav-item.active { background:var(--c-cyan-glow); color:var(--c-cyan); font-weight:500; }
 .nav-item.active::before { content:''; position:absolute; left:0; top:22%; bottom:22%; width:2px; background:var(--c-cyan); border-radius:0 2px 2px 0; }
@@ -175,12 +176,12 @@ body {
 .gauges-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.2rem; }
 .gauge-card { background:var(--c-surface); border:1px solid var(--c-border); border-radius:8px; padding:1rem 0.8rem; text-align:center; box-shadow:var(--c-shadow); }
 .gauge-svg { width:76px; height:76px; margin:0 auto 0.5rem; display:block; }
-.gauge-label { font-family:var(--f-mono); font-size:0.48rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--c-text); margin-bottom:2px; }
-.gauge-val { font-family:var(--f-display); font-size:1.1rem; font-weight:800; }
+.gauge-label { font-family:var(--f-body); font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--c-text); margin-bottom:2px; font-weight:600; }
+.gauge-val { font-family:var(--f-body); font-size:1.25rem; font-weight:700; letter-spacing:-0.01em; }
 .gauge-val.ok   { color:var(--c-green); }
 .gauge-val.warn { color:var(--c-amber); }
 .gauge-val.crit { color:var(--c-red); }
-.gauge-sub { font-family:var(--f-mono); font-size:0.46rem; color:var(--c-text); }
+.gauge-sub { font-family:var(--f-body); font-size:0.68rem; color:var(--c-text); font-weight:500; }
 
 /* ── TABS ── */
 .tabs { display:flex; border-bottom:1px solid var(--c-border); margin-bottom:1.3rem; overflow-x:auto; }
@@ -235,8 +236,8 @@ body {
 /* ── TELEMETRY TABLE ── */
 .telem-row { display:flex; align-items:center; justify-content:space-between; padding:0.55rem 0; border-bottom:1px solid var(--c-border); }
 .telem-row:last-child { border-bottom:none; }
-.telem-key { font-family:var(--f-mono); font-size:0.58rem; letter-spacing:0.08em; color:var(--c-text); }
-.telem-val { font-family:var(--f-mono); font-size:0.63rem; color:var(--c-silver); }
+.telem-key { font-family:var(--f-body); font-size:0.78rem; letter-spacing:0.02em; color:var(--c-text); font-weight:500; }
+.telem-val { font-family:var(--f-mono); font-size:0.78rem; color:var(--c-silver); font-weight:500; }
 .telem-val.ok   { color:var(--c-green); }
 .telem-val.warn { color:var(--c-amber); }
 .telem-badge { font-family:var(--f-mono); font-size:0.48rem; letter-spacing:0.08em; text-transform:uppercase; padding:2px 7px; border-radius:10px; }
@@ -381,16 +382,42 @@ body {
 }
 @keyframes fadeUp { from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none} }
 .card,.device-header { animation:fadeUp 0.4s var(--ease) both; }
+
+/* ── ACCESSIBILITY ── */
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline:3px solid var(--c-cyan); outline-offset:2px; border-radius:4px;
+}
+.skip-link {
+  position:absolute; left:8px; top:-60px; z-index:999;
+  background:var(--c-cyan); color:#fff; padding:0.6rem 1rem; border-radius:6px;
+  font-family:var(--f-body); font-weight:600; font-size:0.9rem; text-decoration:none;
+  transition:top 0.2s;
+}
+.skip-link:focus { top:8px; }
+.sr-only {
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+}
+[data-a11y="on"] { font-size:18px; }
+[data-a11y="on"] .gauge-sub, [data-a11y="on"] .breadcrumb, [data-a11y="on"] .dh-meta span,
+[data-a11y="on"] .comm-item-label, [data-a11y="on"] .telem-key { font-weight:600; }
+[data-a11y="on"] .card, [data-a11y="on"] .gauge-card, [data-a11y="on"] .device-header { border-width:2px; }
+[data-a11y="on"] .status-pill, [data-a11y="on"] .comm-banner, [data-a11y="on"] .telem-badge { border:2px solid currentColor; }
 </style>
 </head>
 <body>
 
+<a href="#mainContent" class="skip-link">Skip to main content</a>
+
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
   <div class="sidebar-brand">
-    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" style="flex-shrink:0">
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" style="flex-shrink:0" aria-hidden="true">
       <circle cx="16" cy="5" r="2.5" fill="#00d4ff" opacity="0.9"/>
       <path d="M14 2 Q16 0 18 2" stroke="#00d4ff" stroke-width="1.2" fill="none"/>
       <rect x="14.5" y="10" width="3" height="18" rx="1.5" fill="#00d4ff" opacity="0.8"/>
@@ -451,25 +478,28 @@ body {
 <!-- TOPBAR -->
 <header class="topbar">
   <div class="topbar-left">
-    <button class="mobile-menu-btn" onclick="toggleSidebar()">
-      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Open navigation menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <a href="index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Fleet</a>
+    <a href="index.html" class="back-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Fleet</a>
     <div>
-      <div class="page-title" id="topbarName">Smart Factory Gateway</div>
-      <div class="breadcrumb">Irofy Console · Device Detail</div>
+      <div class="page-title" id="topbarName">Smart Car Alpha</div>
+      <div class="breadcrumb">Irofy Console · Vehicle Detail</div>
     </div>
   </div>
   <div class="topbar-right">
     <div class="live-indicator"><div class="live-dot"></div>Live</div>
-    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
-      <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <button class="theme-toggle" onclick="toggleA11y(this)" title="Toggle high-contrast large-text mode" aria-label="Toggle accessibility mode" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+    </button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
+      <svg id="themeIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
   </div>
 </header>
 
 <!-- MAIN -->
-<main class="main">
+<main class="main" id="mainContent" role="main">
 <div class="content">
 
   <!-- Device Header -->
@@ -480,11 +510,11 @@ body {
           <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20" stroke-width="3"/></svg>
         </div>
         <div>
-          <div class="dh-title" id="deviceName">Smart Factory Gateway</div>
+          <div class="dh-title" id="deviceName">Smart Car Alpha</div>
           <div class="dh-meta">
-            <span id="deviceId">IRF-001</span><span class="sep">·</span>
-            <span>Linux Edge Board</span><span class="sep">·</span>
-            <span id="deviceSite">Berlin Plant</span><span class="sep">·</span>
+            <span id="deviceId">VH-001</span><span class="sep">·</span>
+            <span>Linux Vehicle Gateway</span><span class="sep">·</span>
+            <span id="deviceSite">Route 66 Corridor</span><span class="sep">·</span>
             <span>FW v2.4.1</span>
           </div>
           <div class="status-pill online"><div class="s-dot"></div>Online · Uptime 14d 6h</div>
@@ -623,10 +653,10 @@ body {
       <div>
         <!-- System info -->
         <div class="card">
-          <div class="card-head"><div class="card-title">Device Info</div></div>
+          <div class="card-head"><div class="card-title">Vehicle Info</div></div>
           <div class="card-body">
-            <div class="telem-row"><span class="telem-key">Device Name</span><span class="telem-val" id="infoName">Smart Factory Gateway</span></div>
-            <div class="telem-row"><span class="telem-key">Industry</span><span class="telem-val">Manufacturing</span></div>
+            <div class="telem-row"><span class="telem-key">Vehicle Name</span><span class="telem-val" id="infoName">Smart Car Alpha</span></div>
+            <div class="telem-row"><span class="telem-key">Industry</span><span class="telem-val" id="infoIndustry">Automotive</span></div>
             <div class="telem-row"><span class="telem-key">OS</span><span class="telem-val">Debian 12 Linux</span></div>
             <div class="telem-row"><span class="telem-key">Architecture</span><span class="telem-val">ARM 64-bit</span></div>
             <div class="telem-row"><span class="telem-key">Uptime</span><span class="telem-val ok" id="uptimeVal">14d 6h 22m</span></div>
@@ -667,9 +697,9 @@ body {
                 <div class="power-btn-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
                 <div class="power-btn-label">Sleep</div><div class="power-btn-desc">Low-power mode</div>
               </div>
-              <div class="power-btn pwr-wake" onclick="showToast('Wake signal sent to device')">
+              <div class="power-btn pwr-wake" onclick="doAction('wake')">
                 <div class="power-btn-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
-                <div class="power-btn-label">Wake</div><div class="power-btn-desc">Send WoL signal</div>
+                <div class="power-btn-label">Wake</div><div class="power-btn-desc">Power on</div>
               </div>
               <div class="power-btn pwr-off" onclick="openModal('shutdown')">
                 <div class="power-btn-icon"><svg viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
@@ -684,6 +714,14 @@ body {
                 <div class="power-btn-label">E-Stop</div><div class="power-btn-desc">Force cut power</div>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Live Power State</div></div>
+          <div class="card-body">
+            <div class="telem-row"><span class="telem-key">Power State</span><span class="telem-badge info" id="pwrStateVal">—</span></div>
+            <div class="telem-row"><span class="telem-key">System Health</span><span class="telem-val" id="pwrHealthVal">—</span></div>
+            <div class="telem-row"><span class="telem-key">Source</span><span class="telem-val" id="pwrSourceVal" style="font-size:0.62rem;">Simulated (demo vehicle)</span></div>
           </div>
         </div>
         <div class="card">
@@ -722,8 +760,8 @@ body {
             <div class="ota-current">
               <div>
                 <div class="ota-fw-label">Current Firmware</div>
-                <div class="ota-fw-ver">v2.4.1</div>
-                <div class="ota-fw-date">Installed 18 Apr 2026 · Hash a3f2c8…</div>
+                <div class="ota-fw-ver" id="otaFwVer">v2.4.1</div>
+                <div class="ota-fw-date" id="otaFwDate">Installed 18 Apr 2026 · Hash a3f2c8…</div>
               </div>
               <span class="new-badge">Update Available</span>
             </div>
@@ -848,25 +886,25 @@ body {
 <div id="toast" style="position:fixed;bottom:1.4rem;right:1.4rem;background:var(--c-surface);border:1px solid var(--c-border2);border-radius:6px;padding:0.65rem 1rem;font-family:var(--f-mono);font-size:0.63rem;color:var(--c-cyan);z-index:300;transform:translateY(60px);opacity:0;transition:all 0.35s var(--ease);pointer-events:none;max-width:280px;box-shadow:var(--c-shadow-md);"></div>
 
 <!-- MODALS -->
-<div class="modal-overlay" id="modal-reboot"><div class="modal-box"><div class="modal-title">Confirm Reboot</div><div class="modal-body">Send a graceful reboot to <strong id="mDevName">this device</strong>. It will restart and reconnect within ~45 seconds.</div><div class="modal-actions"><button class="modal-cancel" onclick="closeModal('modal-reboot')">Cancel</button><button class="modal-confirm primary" onclick="doAction('reboot')">Reboot Device</button></div></div></div>
-<div class="modal-overlay" id="modal-sleep"><div class="modal-box"><div class="modal-title">Enter Sleep Mode</div><div class="modal-body">Put the device into low-power sleep. Non-critical plugins will suspend. Wake trigger: GPIO or RTC timer.</div><div class="modal-actions"><button class="modal-cancel" onclick="closeModal('modal-sleep')">Cancel</button><button class="modal-confirm primary" onclick="doAction('sleep')">Engage Sleep</button></div></div></div>
-<div class="modal-overlay" id="modal-shutdown"><div class="modal-box"><div class="modal-title">Confirm Shutdown</div><div class="modal-body">Graceful shutdown — all plugins will unload cleanly. Device goes offline until manually powered on.</div><div class="modal-actions"><button class="modal-cancel" onclick="closeModal('modal-shutdown')">Cancel</button><button class="modal-confirm danger" onclick="doAction('shutdown')">Shutdown</button></div></div></div>
-<div class="modal-overlay" id="modal-estop"><div class="modal-box"><div class="modal-title" style="color:var(--c-red)">⚠ Emergency Stop</div><div class="modal-body">This immediately cuts power without graceful shutdown. Active field operations will be interrupted. Use only in an emergency.</div><div class="modal-actions"><button class="modal-cancel" onclick="closeModal('modal-estop')">Cancel</button><button class="modal-confirm danger" onclick="doAction('estop')">Force Stop</button></div></div></div>
+<div class="modal-overlay" id="modal-reboot"><div class="modal-box"><div class="modal-title">Confirm Reboot</div><div class="modal-body">Send a graceful reboot to <strong id="mDevName">this vehicle</strong>. The gateway will restart and reconnect within ~45 seconds.</div><div class="modal-actions"><button class="modal-cancel" onclick="closeModal('modal-reboot')">Cancel</button><button class="modal-confirm primary" onclick="doAction('reboot')">Reboot Gateway</button></div></div></div>
+<div class="modal-overlay" id="modal-sleep"><div class="modal-box"><div class="modal-title">Enter Sleep Mode</div><div class="modal-body">Put the vehicle gateway into low-power sleep. Non-critical plugins will suspend. Wake trigger: GPIO or RTC timer.</div><div class="modal-actions"><button class="modal-cancel" onclick="closeModal('modal-sleep')">Cancel</button><button class="modal-confirm primary" onclick="doAction('sleep')">Engage Sleep</button></div></div></div>
+<div class="modal-overlay" id="modal-shutdown"><div class="modal-box"><div class="modal-title">Confirm Shutdown</div><div class="modal-body">Graceful shutdown — all plugins will unload cleanly. Vehicle gateway goes offline until manually powered on.</div><div class="modal-actions"><button class="modal-cancel" onclick="closeModal('modal-shutdown')">Cancel</button><button class="modal-confirm danger" onclick="doAction('shutdown')">Shutdown</button></div></div></div>
+<div class="modal-overlay" id="modal-estop"><div class="modal-box"><div class="modal-title" style="color:var(--c-red)">⚠ Emergency Stop</div><div class="modal-body">This immediately cuts power without graceful shutdown. Active vehicle operations will be interrupted. Use only in an emergency.</div><div class="modal-actions"><button class="modal-cancel" onclick="closeModal('modal-estop')">Cancel</button><button class="modal-confirm danger" onclick="doAction('estop')">Force Stop</button></div></div></div>
 
 <script>
 // Device lookup
 const deviceData = {
-  'IRF-001':{ name:'Smart Factory Gateway',   site:'Berlin Plant',     comm:'cloud', industry:'Manufacturing'    },
-  'IRF-002':{ name:'Oil Pipeline Monitor',     site:'North Field',      comm:'local', industry:'Energy'           },
-  'IRF-003':{ name:'Building HVAC Controller', site:'HQ Tower',         comm:'cloud', industry:'Smart Building'   },
-  'IRF-004':{ name:'Water Treatment Unit',     site:'City Plant',       comm:'local', industry:'Utilities'        },
-  'IRF-005':{ name:'Cold Chain Tracker',       site:'Logistics Hub',    comm:'cloud', industry:'Logistics'        },
-  'IRF-006':{ name:'Solar Farm Controller',    site:'Desert Site',      comm:'local', industry:'Renewable Energy' },
-  'IRF-007':{ name:'Smart Car',                site:'Test Vehicle',     comm:'cloud', industry:'Automotive', live:true },
+  'VH-001':{ name:'Smart Car Alpha',   site:'Route 66 Corridor',  comm:'cloud', industry:'Automotive' },
+  'VH-002':{ name:'Smart Car Beta',    site:'Highway A7 North',   comm:'local', industry:'Automotive' },
+  'VH-003':{ name:'Smart Car Gamma',   site:'Urban Zone 4',       comm:'cloud', industry:'Automotive' },
+  'VH-004':{ name:'Smart Car Delta',   site:'Motorway M1 South',  comm:'local', industry:'Automotive' },
+  'VH-005':{ name:'Smart Car Epsilon', site:'Depot Bay 7',        comm:'cloud', industry:'Automotive' },
+  'VH-006':{ name:'Smart Car Zeta',    site:'Coastal Drive B3',   comm:'local', industry:'Automotive' },
+  'VH-007':{ name:'Smart Car Eta',     site:'Test Vehicle',       comm:'cloud', industry:'Automotive', live:true },
 };
 const params = new URLSearchParams(location.search);
-const devId  = params.get('id') || 'IRF-001';
-const dev    = deviceData[devId] || deviceData['IRF-001'];
+const devId  = params.get('id') || 'VH-001';
+const dev    = deviceData[devId] || deviceData['VH-001'];
 
 // Populate header
 document.getElementById('deviceName').textContent = dev.name;
@@ -874,6 +912,8 @@ document.getElementById('topbarName').textContent = dev.name;
 document.getElementById('deviceId').textContent   = devId;
 document.getElementById('deviceSite').textContent = dev.site;
 document.getElementById('infoName').textContent   = dev.name;
+const industryEl = document.getElementById('infoIndustry');
+if(industryEl) industryEl.textContent = dev.industry || 'Automotive';
 document.querySelectorAll('#mDevName').forEach(e=>e.textContent=dev.name);
 if(dev.live){
   document.getElementById('liveHwBadge').style.display='inline-flex';
@@ -921,6 +961,14 @@ function toggleTheme() {
     :'<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
 }
 
+// Accessibility (high-contrast / large-text) mode
+function toggleA11y(btn){
+  const html=document.documentElement;
+  const on=html.getAttribute('data-a11y')==='on';
+  html.setAttribute('data-a11y',on?'off':'on');
+  btn.setAttribute('aria-pressed',on?'false':'true');
+}
+
 // Sidebar
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('open');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('open');}
@@ -929,10 +977,31 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 function openModal(k){document.getElementById('modal-'+k).classList.add('open');}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');}));
-function doAction(a){
+async function doAction(a){
   document.querySelectorAll('.modal-overlay').forEach(el=>el.classList.remove('open'));
-  const m={reboot:'Reboot sent. Reconnect expected in ~45s.',sleep:'Sleep mode activated.',shutdown:'Shutdown initiated.',estop:'Emergency stop executed.'};
-  showToast(m[a]||'Command sent.');
+  const msg = {
+    reboot:'Reboot sent. Reconnect expected in ~45s.',
+    sleep:'Sleep mode activated.',
+    shutdown:'Shutdown initiated.',
+    estop:'Emergency stop executed.'
+  };
+
+  // Simulated vehicles: keep the demo behaviour (no real backend).
+  if(!dev.live){
+    showToast(msg[a] || 'Command sent.');
+    return;
+  }
+
+  // Live hardware: issue a real Redfish reset action against the device.
+  showToast('Sending command to vehicle…');
+  try{
+    await sendPowerAction(a);
+    showToast('✓ ' + (msg[a] || 'Command accepted by hardware.'));
+    // Refresh the real power state shortly after the action.
+    setTimeout(pollPowerState, 1500);
+  } catch(err){
+    showToast('✗ Command failed — ' + err.message + '. Check the vehicle gateway.');
+  }
 }
 
 // Toast
@@ -941,8 +1010,9 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 // OTA
 function toggleNotes(id){document.getElementById(id).classList.toggle('open');}
 let otaRunning=false;
-function startOTA(ver){
-  if(otaRunning)return;otaRunning=true;switchTab('ota');
+
+// Run the visual progress animation. onComplete fires when the bar reaches 100%.
+function runOtaAnimation(ver, onComplete){
   const wrap=document.getElementById('otaProgress');wrap.classList.add('active');
   document.getElementById('otaLabel').textContent='Pushing '+ver+'…';
   let pct=0;
@@ -953,8 +1023,41 @@ function startOTA(ver){
     fill.style.width=pct+'%';pctEl.textContent=Math.round(pct)+'%';
     const si=pct<20?1:pct<50?2:pct<75?3:pct<95?4:5;
     steps.forEach((s,i)=>{const el=document.getElementById(s);el.className='ota-step'+(i<si-1?' done':i===si-1?' active':'');});
-    if(pct>=100){clearInterval(iv);steps.forEach(s=>document.getElementById(s).className='ota-step done');setTimeout(()=>{otaRunning=false;wrap.classList.remove('active');showToast('✓ '+ver+' installed. Device rebooting…');},700);}
+    if(pct>=100){
+      clearInterval(iv);
+      steps.forEach(s=>document.getElementById(s).className='ota-step done');
+      setTimeout(()=>{otaRunning=false;wrap.classList.remove('active');if(onComplete)onComplete();},700);
+    }
   },180);
+}
+
+async function startOTA(ver){
+  if(otaRunning)return;
+  otaRunning=true;
+  switchTab('ota');
+
+  // Simulated vehicles: keep the demo animation (no real backend).
+  if(!dev.live){
+    runOtaAnimation(ver, ()=>showToast('✓ '+ver+' installed. Vehicle rebooting…'));
+    return;
+  }
+
+  // Live hardware: issue a real Redfish SimpleUpdate, then show progress.
+  // ImageURI points at the firmware image the gateway should fetch/apply.
+  const imageUri = 'https://updates.irofy.com/firmware/'+ver+'.bin';
+  showToast('Sending update request to vehicle…');
+  try{
+    const task = await sendFirmwareUpdate(imageUri);
+    const taskId = (task && task.Id) ? task.Id : 'unknown';
+    runOtaAnimation(ver, ()=>{
+      showToast('✓ '+ver+' update accepted (task '+taskId+'). Refreshing firmware…');
+      setTimeout(pollFirmwareInventory, 1500);
+    });
+  } catch(err){
+    otaRunning=false;
+    document.getElementById('otaProgress').classList.remove('active');
+    showToast('✗ Update failed — '+err.message+'. Check the vehicle gateway.');
+  }
 }
 // Live chart
 const cpuH=Array.from({length:40},()=>30+Math.random()*40);
@@ -997,6 +1100,105 @@ async function pollRealThermal(){
 if(dev.live){
   pollRealThermal();
   setInterval(pollRealThermal, 5000);
+}
+
+// ── REAL HARDWARE POWER CONTROL (Smart Car / Pi via Redfish) ──
+const REDFISH_SYSTEM_URL = 'https://redfish.irofy.com/redfish/v1/Systems/1';
+const REDFISH_RESET_URL  = 'https://redfish.irofy.com/redfish/v1/Systems/1/Actions/ComputerSystem.Reset';
+
+// Map each UI action to a Redfish ResetType (as accepted by power.c)
+const RESET_TYPE_MAP = {
+  reboot:   'ForceRestart',
+  shutdown: 'GracefulShutdown',
+  estop:    'ForceOff',
+  sleep:    'GracefulShutdown',   // no native sleep in Redfish; graceful halt is closest
+  wake:     'On',
+  cycle:    'ForceCycle'
+};
+
+// POST a real reset action to the hardware. Returns true on success (HTTP 2xx).
+async function sendPowerAction(action){
+  const resetType = RESET_TYPE_MAP[action];
+  if(!resetType) throw new Error('Unknown action: '+action);
+  const res = await fetch(REDFISH_RESET_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    cache: 'no-store',
+    body: JSON.stringify({ ResetType: resetType })
+  });
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  return true;
+}
+
+// GET the real power state and reflect it in the Power tab.
+async function pollPowerState(){
+  const stateEl  = document.getElementById('pwrStateVal');
+  const healthEl = document.getElementById('pwrHealthVal');
+  const srcEl    = document.getElementById('pwrSourceVal');
+  try{
+    const res = await fetch(REDFISH_SYSTEM_URL, {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    if(stateEl){
+      const ps = data.PowerState || 'Unknown';
+      stateEl.textContent = ps;
+      stateEl.className = 'telem-badge ' + (ps==='On' ? 'ok' : ps==='Off' ? 'warn' : 'info');
+    }
+    if(healthEl){
+      const h = (data.Status && data.Status.Health) || '—';
+      healthEl.textContent = h;
+      healthEl.className = 'telem-val ' + (h==='OK' ? 'ok' : 'warn');
+    }
+    if(srcEl) srcEl.textContent = 'Live from redfish.irofy.com';
+  } catch(err){
+    if(stateEl){ stateEl.textContent = 'Unreachable'; stateEl.className = 'telem-badge warn'; }
+    if(healthEl){ healthEl.textContent = '—'; }
+    if(srcEl) srcEl.textContent = 'Offline — cannot reach vehicle';
+  }
+}
+
+if(dev.live){
+  pollPowerState();
+  setInterval(pollPowerState, 5000);
+}
+
+// ── REAL HARDWARE FIRMWARE UPDATE (Smart Car / Pi via Redfish UpdateService) ──
+const REDFISH_UPDATE_SERVICE_URL = 'https://redfish.irofy.com/redfish/v1/UpdateService';
+const REDFISH_FW_INVENTORY_URL   = 'https://redfish.irofy.com/redfish/v1/UpdateService/FirmwareInventory';
+const REDFISH_SIMPLE_UPDATE_URL  = 'https://redfish.irofy.com/redfish/v1/UpdateService/Actions/UpdateService.SimpleUpdate';
+
+// Read the real current firmware version from the hardware inventory.
+async function pollFirmwareInventory(){
+  const verEl  = document.getElementById('otaFwVer');
+  const dateEl = document.getElementById('otaFwDate');
+  try{
+    const res = await fetch(REDFISH_FW_INVENTORY_URL, {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    const m = data.Members && data.Members[0];
+    if(m && verEl){
+      verEl.textContent = (m.Name || 'Firmware') + ' ' + (m.Version || '—');
+    }
+    if(dateEl) dateEl.textContent = 'Live from redfish.irofy.com · UpdateService';
+  } catch(err){
+    if(dateEl) dateEl.textContent = 'Offline — cannot reach UpdateService';
+  }
+}
+
+// POST a real SimpleUpdate to the hardware. Returns the parsed task object.
+async function sendFirmwareUpdate(imageUri){
+  const res = await fetch(REDFISH_SIMPLE_UPDATE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    cache: 'no-store',
+    body: JSON.stringify({ ImageURI: imageUri })
+  });
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  return res.json().catch(()=> ({}));
+}
+
+if(dev.live){
+  pollFirmwareInventory();
 }
 
 setInterval(()=>{

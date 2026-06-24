@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Irofy — Fleet Dashboard</title>
+<title>Irofy — Smart Car Fleet Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 /* ── LIGHT THEME (default) ── */
 :root {
@@ -18,10 +18,10 @@
   --c-cyan:      #0099cc;
   --c-cyan-dim:  #e0f4fb;
   --c-cyan-glow: rgba(0,153,204,0.08);
-  --c-silver:    #334155;
-  --c-silver-dim:#94a3b8;
+  --c-silver:    #1e293b;
+  --c-silver-dim:#475569;
   --c-white:     #0f172a;
-  --c-text:      #64748b;
+  --c-text:      #475569;
   --c-green:     #059669;
   --c-green-dim: rgba(5,150,105,0.1);
   --c-red:       #dc2626;
@@ -32,8 +32,8 @@
   --c-shadow-md: 0 4px 16px rgba(0,0,0,0.08);
   --topbar-bg:   rgba(244,246,249,0.9);
   --f-display:   'Syne', sans-serif;
-  --f-body:      'Instrument Sans', sans-serif;
-  --f-mono:      'JetBrains Mono', monospace;
+  --f-body:      'Inter', system-ui, -apple-system, sans-serif;
+  --f-mono:      'JetBrains Mono', 'Courier New', monospace;
   --ease: cubic-bezier(0.16,1,0.3,1);
 }
 /* ── DARK THEME ── */
@@ -46,10 +46,10 @@
   --c-cyan:      #00d4ff;
   --c-cyan-dim:  #003d4d;
   --c-cyan-glow: rgba(0,212,255,0.1);
-  --c-silver:    #a8b8c4;
-  --c-silver-dim:#2a3540;
+  --c-silver:    #c4d2de;
+  --c-silver-dim:#5a6b7a;
   --c-white:     #f0f6fc;
-  --c-text:      #7a8fa8;
+  --c-text:      #9fb3c8;
   --c-green:     #00e5a0;
   --c-green-dim: rgba(0,229,160,0.12);
   --c-red:       #ff4d6a;
@@ -68,6 +68,7 @@ body {
   font-family:var(--f-body); font-weight:400;
   line-height:1.6; overflow-x:hidden; min-height:100vh;
   transition: background 0.3s, color 0.3s;
+  -webkit-font-smoothing:antialiased;
 }
 ::selection { background:var(--c-cyan); color:#fff; }
 ::-webkit-scrollbar { width:4px; }
@@ -91,12 +92,12 @@ body {
 .brand-tag { font-family:var(--f-mono); font-size:0.46rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--c-cyan); margin-top:1px; }
 
 .nav-section { padding:1rem 0.85rem 0.3rem; }
-.nav-section-label { font-family:var(--f-mono); font-size:0.48rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--c-silver-dim); padding:0 0.5rem; margin-bottom:0.4rem; }
+.nav-section-label { font-family:var(--f-body); font-size:0.62rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--c-silver-dim); padding:0 0.5rem; margin-bottom:0.4rem; font-weight:600; }
 .nav-item {
   display:flex; align-items:center; gap:0.7rem;
   padding:0.58rem 0.75rem; border-radius:6px; cursor:pointer;
-  font-size:0.81rem; color:var(--c-text); transition:all 0.2s;
-  text-decoration:none; margin-bottom:2px; position:relative;
+  font-size:0.84rem; color:var(--c-text); transition:all 0.2s;
+  text-decoration:none; margin-bottom:2px; position:relative; font-weight:500;
 }
 .nav-item:hover { background:var(--c-cyan-glow); color:var(--c-silver); }
 .nav-item.active { background:var(--c-cyan-glow); color:var(--c-cyan); font-weight:500; }
@@ -159,13 +160,13 @@ body {
 .stat-card.c-offline::before { background:linear-gradient(90deg, transparent, var(--c-red), transparent); }
 .stat-card.c-warning::before { background:linear-gradient(90deg, transparent, var(--c-amber), transparent); }
 .stat-card.c-total::before   { background:linear-gradient(90deg, transparent, var(--c-cyan), transparent); }
-.stat-label { font-family:var(--f-mono); font-size:0.5rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--c-text); margin-bottom:0.5rem; }
+.stat-label { font-family:var(--f-body); font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--c-text); margin-bottom:0.5rem; font-weight:600; }
 .stat-value { font-family:var(--f-display); font-size:2rem; font-weight:800; color:var(--c-white); line-height:1; margin-bottom:0.25rem; }
 .stat-card.c-online .stat-value  { color:var(--c-green); }
 .stat-card.c-offline .stat-value { color:var(--c-red); }
 .stat-card.c-warning .stat-value { color:var(--c-amber); }
 .stat-card.c-total .stat-value   { color:var(--c-cyan); }
-.stat-sub { font-size:0.7rem; color:var(--c-text); }
+.stat-sub { font-size:0.78rem; color:var(--c-text); font-weight:500; }
 
 /* ── TOOLBAR ── */
 .toolbar { display:flex; align-items:center; gap:0.6rem; margin-bottom:1.1rem; flex-wrap:wrap; }
@@ -262,8 +263,8 @@ body {
 .device-icon.warning svg { stroke:var(--c-amber); }
 
 .device-info { flex:1; min-width:0; }
-.device-name { font-family:var(--f-display); font-size:0.86rem; font-weight:700; color:var(--c-white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; }
-.device-sub  { font-family:var(--f-mono); font-size:0.5rem; letter-spacing:0.1em; color:var(--c-text); margin-bottom:5px; }
+.device-name { font-family:var(--f-display); font-size:0.92rem; font-weight:700; color:var(--c-white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; }
+.device-sub  { font-family:var(--f-body); font-size:0.72rem; letter-spacing:0.02em; color:var(--c-text); margin-bottom:5px; font-weight:500; }
 .device-status-badge {
   display:flex; align-items:center; gap:4px;
   font-family:var(--f-mono); font-size:0.5rem; letter-spacing:0.1em; text-transform:uppercase;
@@ -297,8 +298,8 @@ body {
 .comm-row-right { display:flex; align-items:center; gap:0.4rem; }
 
 .metrics-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem; }
-.metric-mini-label { font-family:var(--f-mono); font-size:0.46rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--c-text); margin-bottom:2px; }
-.metric-mini-value { font-family:var(--f-mono); font-size:0.76rem; color:var(--c-silver); }
+.metric-mini-label { font-family:var(--f-body); font-size:0.65rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--c-text); margin-bottom:2px; font-weight:600; }
+.metric-mini-value { font-family:var(--f-body); font-size:0.92rem; color:var(--c-silver); font-weight:700; letter-spacing:-0.01em; }
 .metric-mini-value.ok   { color:var(--c-green); }
 .metric-mini-value.warn { color:var(--c-amber); }
 .mini-bar-wrap { height:3px; background:var(--c-border2); border-radius:2px; margin-top:3px; overflow:hidden; }
@@ -345,16 +346,43 @@ body {
 .stat-card { animation:fadeUp 0.35s var(--ease) both; }
 .stat-card:nth-child(1){animation-delay:0s}.stat-card:nth-child(2){animation-delay:0.06s}
 .stat-card:nth-child(3){animation-delay:0.12s}.stat-card:nth-child(4){animation-delay:0.18s}
+
+/* ── ACCESSIBILITY ── */
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline:3px solid var(--c-cyan); outline-offset:2px; border-radius:4px;
+}
+.skip-link {
+  position:absolute; left:8px; top:-60px; z-index:999;
+  background:var(--c-cyan); color:#fff; padding:0.6rem 1rem; border-radius:6px;
+  font-family:var(--f-body); font-weight:600; font-size:0.9rem; text-decoration:none;
+  transition:top 0.2s;
+}
+.skip-link:focus { top:8px; }
+.sr-only {
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+}
+/* High-contrast / large-text mode */
+[data-a11y="on"] { font-size:18px; }
+[data-a11y="on"] .device-sub, [data-a11y="on"] .stat-sub,
+[data-a11y="on"] .metric-mini-label, [data-a11y="on"] .breadcrumb { font-weight:600; }
+[data-a11y="on"] .device-card, [data-a11y="on"] .stat-card { border-width:2px; }
+[data-a11y="on"] .device-status-badge, [data-a11y="on"] .comm-badge { border:2px solid currentColor; }
 </style>
 </head>
 <body>
 
+<a href="#mainContent" class="skip-link">Skip to main content</a>
+
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
   <div class="sidebar-brand">
-    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" style="flex-shrink:0">
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" style="flex-shrink:0" aria-hidden="true">
       <circle cx="16" cy="5" r="2.5" fill="#00d4ff" opacity="0.9"/>
       <path d="M14 2 Q16 0 18 2" stroke="#00d4ff" stroke-width="1.2" fill="none"/>
       <rect x="14.5" y="10" width="3" height="18" rx="1.5" fill="#00d4ff" opacity="0.8"/>
@@ -420,39 +448,42 @@ body {
 <!-- TOPBAR -->
 <header class="topbar">
   <div class="topbar-left">
-    <button class="mobile-menu-btn" onclick="toggleSidebar()">
-      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Open navigation menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <div>
-      <div class="page-title">Fleet Dashboard</div>
-      <div class="breadcrumb">Irofy Console · Devices</div>
+      <div class="page-title">Smart Car Fleet</div>
+      <div class="breadcrumb">Irofy Console · Vehicles</div>
     </div>
   </div>
   <div class="topbar-right">
     <div class="live-indicator"><div class="live-dot"></div>Live</div>
-    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
-      <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <button class="theme-toggle" onclick="toggleA11y(this)" title="Toggle high-contrast large-text mode" aria-label="Toggle accessibility mode" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v0"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+    </button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode">
+      <svg id="themeIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
   </div>
 </header>
 
 <!-- MAIN -->
-<main class="main">
+<main class="main" id="mainContent" role="main">
 <div class="content">
 
   <!-- Alert -->
-  <div class="alert-banner" id="alertBanner">
-    <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    <div class="alert-banner-text"><strong>Smart Factory Gateway</strong> is reporting high CPU temperature — review before OTA deployment.</div>
-    <div class="alert-dismiss" onclick="document.getElementById('alertBanner').remove()">
-      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </div>
+  <div class="alert-banner" id="alertBanner" role="alert">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div class="alert-banner-text"><strong>⚠ Warning — Smart Car Gamma (VH-003)</strong> is reporting high CPU temperature — review vehicle unit before dispatching.</div>
+    <button class="alert-dismiss" onclick="document.getElementById('alertBanner').remove()" aria-label="Dismiss warning">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </div>
 
   <!-- Stats -->
   <div class="stats-row">
-    <div class="stat-card c-total"><div class="stat-label">Total Devices</div><div class="stat-value">7</div><div class="stat-sub">Across 4 sites</div></div>
-    <div class="stat-card c-online"><div class="stat-label">Online</div><div class="stat-value">5</div><div class="stat-sub">Remote accessible</div></div>
+    <div class="stat-card c-total"><div class="stat-label">Total Vehicles</div><div class="stat-value">7</div><div class="stat-sub">Active fleet units</div></div>
+    <div class="stat-card c-online"><div class="stat-label">Online</div><div class="stat-value">5</div><div class="stat-sub">Remotely accessible</div></div>
     <div class="stat-card c-offline"><div class="stat-label">Offline</div><div class="stat-value">1</div><div class="stat-sub">Last seen 4h ago</div></div>
     <div class="stat-card c-warning"><div class="stat-label">Warnings</div><div class="stat-value">1</div><div class="stat-sub">Needs attention</div></div>
   </div>
@@ -460,8 +491,9 @@ body {
   <!-- Toolbar -->
   <div class="toolbar">
     <div class="search-wrap">
-      <div class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-      <input type="text" id="searchInput" placeholder="Search devices…" oninput="filterDevices()"/>
+      <div class="search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <label for="searchInput" class="sr-only">Search vehicles</label>
+      <input type="text" id="searchInput" placeholder="Search vehicles…" oninput="filterDevices()" aria-label="Search vehicles"/>
     </div>
     <button class="filter-btn active" onclick="setFilter('all',this)">All <span id="cnt-all">6</span></button>
     <button class="filter-btn" onclick="setFilter('online',this)">Online</button>
@@ -471,8 +503,8 @@ body {
 
   <!-- Section header -->
   <div class="section-header">
-    <span class="section-label">Connected Devices</span>
-    <span class="section-count" id="visibleCount">6 devices</span>
+    <span class="section-label">Connected Vehicles</span>
+    <span class="section-count" id="visibleCount">7 vehicles</span>
   </div>
 
   <!-- Device Grid -->
@@ -482,52 +514,52 @@ body {
 </main>
 
 <script>
-// ── Device Data (investor-friendly names) ──
+// ── Device Data (Smart Car Fleet) ──
 const devices = [
   {
-    id:'IRF-001', name:'Smart Factory Gateway',
-    desc:'Assembly Line · Berlin Plant',
+    id:'VH-001', name:'Smart Car Alpha',
+    desc:'Fleet Unit · Route 66 Corridor',
     status:'online', commMode:'cloud',
     cpu:42, mem:61, temp:47, uptime:'14d 6h', fw:'v2.4.1',
-    industry:'Manufacturing', lastSeen:'now'
+    industry:'Automotive', lastSeen:'now'
   },
   {
-    id:'IRF-002', name:'Oil Pipeline Monitor',
-    desc:'Pump Station 3 · North Field',
+    id:'VH-002', name:'Smart Car Beta',
+    desc:'Fleet Unit · Highway A7 North',
     status:'online', commMode:'local',
     cpu:28, mem:44, temp:39, uptime:'21d 2h', fw:'v2.4.1',
-    industry:'Energy', lastSeen:'now'
+    industry:'Automotive', lastSeen:'now'
   },
   {
-    id:'IRF-003', name:'Building HVAC Controller',
-    desc:'Floors 4–8 · HQ Tower',
+    id:'VH-003', name:'Smart Car Gamma',
+    desc:'Fleet Unit · Urban Zone 4',
     status:'warning', commMode:'cloud',
     cpu:88, mem:72, temp:74, uptime:'3d 14h', fw:'v2.3.9',
-    industry:'Smart Building', lastSeen:'now'
+    industry:'Automotive', lastSeen:'now'
   },
   {
-    id:'IRF-004', name:'Water Treatment Unit',
-    desc:'Filtration Stage 2 · City Plant',
+    id:'VH-004', name:'Smart Car Delta',
+    desc:'Fleet Unit · Motorway M1 South',
     status:'online', commMode:'local',
     cpu:19, mem:38, temp:41, uptime:'62d 0h', fw:'v2.4.1',
-    industry:'Utilities', lastSeen:'now'
+    industry:'Automotive', lastSeen:'now'
   },
   {
-    id:'IRF-005', name:'Cold Chain Tracker',
-    desc:'Refrigeration Bay 7 · Logistics Hub',
+    id:'VH-005', name:'Smart Car Epsilon',
+    desc:'Fleet Unit · Depot Bay 7',
     status:'offline', commMode:'cloud',
     cpu:0, mem:0, temp:0, uptime:'—', fw:'v2.3.8',
-    industry:'Logistics', lastSeen:'4h ago'
+    industry:'Automotive', lastSeen:'4h ago'
   },
   {
-    id:'IRF-006', name:'Solar Farm Controller',
-    desc:'Panel Array B · Desert Site',
+    id:'VH-006', name:'Smart Car Zeta',
+    desc:'Fleet Unit · Coastal Drive B3',
     status:'online', commMode:'local',
     cpu:22, mem:41, temp:38, uptime:'89d 7h', fw:'v2.4.1',
-    industry:'Renewable Energy', lastSeen:'now'
+    industry:'Automotive', lastSeen:'now'
   },
   {
-    id:'IRF-007', name:'Smart Car',
+    id:'VH-007', name:'Smart Car Eta',
     desc:'Test Vehicle · Pi Gateway',
     status:'online', commMode:'cloud', live:true,
     cpu:0, mem:0, temp:0, uptime:'—', fw:'v1.0.0',
@@ -561,9 +593,9 @@ function renderCard(d) {
   const tempId = d.live ? `id="liveTemp-${d.id}"` : '';
   const tempBarId = d.live ? `id="liveTempBar-${d.id}"` : '';
 
-  return `<a class="device-card ${s}" href="device.html?id=${d.id}" data-status="${s}" data-name="${d.name.toLowerCase()}">
+  return `<a class="device-card ${s}" href="device.html?id=${d.id}" data-status="${s}" data-name="${d.name.toLowerCase()}" aria-label="${d.name}, ${d.id}, status ${s}${on?', temperature '+d.temp+' degrees':''}">
     <div class="device-card-header">
-      <div class="device-icon ${s}">${statusIcon(s)}</div>
+      <div class="device-icon ${s}" aria-hidden="true">${statusIcon(s)}</div>
       <div class="device-info">
         <div class="device-name">${d.name}${liveTag}</div>
         <div class="device-sub">${d.desc}</div>
@@ -613,7 +645,7 @@ function filterDevices() {
     c.style.display = ok?'':'none';
     if(ok) vis++;
   });
-  document.getElementById('visibleCount').textContent = vis+' device'+(vis!==1?'s':'');
+  document.getElementById('visibleCount').textContent = vis+' vehicle'+(vis!==1?'s':'');
 }
 
 function setFilter(f,btn) {
@@ -631,6 +663,13 @@ function toggleTheme() {
   icon.innerHTML = isDark
     ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
     : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+}
+
+function toggleA11y(btn) {
+  const html = document.documentElement;
+  const on = html.getAttribute('data-a11y') === 'on';
+  html.setAttribute('data-a11y', on ? 'off' : 'on');
+  btn.setAttribute('aria-pressed', on ? 'false' : 'true');
 }
 
 function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); }
